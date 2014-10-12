@@ -13,8 +13,15 @@ func playbackgroundMusicPlayer(filename: String) {
     var error: NSError? = nil
     
     backgroundMusicPlayer =
-        AVAudioPlayer(contentsOfURL: url, erro
+        AVAudioPlayer(contentsOfURL: url, error: &error)
+    if backgroundMusicPlayer == nil{
+        println("Could not create audio player: \(error!)")
+        return
+    }
     
+    backgroundMusicPlayer.numberOfLoops = -1
+    backgroundMusicPlayer.prepareToPlay()
+    backgroundMusicPlayer.play()
 }
 
 
@@ -64,6 +71,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let player = SKSpriteNode(imageNamed: "player")
     
     override func didMoveToView(view: SKView) {
+        playbackgroundMusicPlayer("background-music-aac.caf")
         // 2
         backgroundColor = SKColor.whiteColor()
         // 3
@@ -118,6 +126,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesEnded(touches: NSSet, withEvent event: UIEvent){
+        runAction(SKAction.playSoundFileNamed("pew-pew-lei.caf", waitForCompletion: false))
         
         //choose one of the touches to work with
         let touch = touches.anyObject() as UITouch
